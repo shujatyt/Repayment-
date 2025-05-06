@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repayment Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .repayment-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .account-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .pending-screen {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-color: #fff8e1;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        .upi-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .upi-id {
+            font-weight: bold;
+        }
+        .copy-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            width: auto;
+        }
+        .copy-btn:hover {
+            background-color: #0b7dda;
+        }
+        .copy-btn.copied {
+            background-color: #4CAF50;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="repayment-container">
+        <h2>Repayment Portal</h2>
+        
+        <div class="account-info">
+            <h3>Account Details</h3>
+            <p><strong>Account Holder Name:</strong> Rahul</p>
+            <div class="upi-container">
+                <strong>UPI ID:</strong>
+                <span class="upi-id" id="upi-id">ragj798-2@okaxis</span>
+                <button class="copy-btn" id="copy-btn">Copy</button>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="utr">Enter UTR Number:</label>
+            <input type="text" id="utr" name="utr" placeholder="Enter your UTR number here" required>
+        </div>
+        
+        <button id="submit-btn">Submit Payment</button>
+        
+        <div id="pending-screen" class="pending-screen">
+            <div class="spinner"></div>
+            <h3>Payment Processing</h3>
+            <p>Your payment is currently pending. Please wait while we process your transaction.</p>
+            <p>UTR Number: <span id="display-utr"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            const utrNumber = document.getElementById('utr').value;
+            
+            if (utrNumber.trim() === '') {
+                alert('Please enter your UTR number');
+                return;
+            }
+            
+            // Display the pending screen
+            document.getElementById('display-utr').textContent = utrNumber;
+            document.getElementById('pending-screen').style.display = 'block';
+            
+            // Scroll to the pending screen
+            document.getElementById('pending-screen').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Copy UPI ID functionality
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            const upiId = document.getElementById('upi-id').textContent;
+            const copyBtn = document.getElementById('copy-btn');
+            
+            navigator.clipboard.writeText(upiId).then(() => {
+                // Change button text temporarily
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy UPI ID: ', err);
+                alert('Failed to copy UPI ID. Please try again or copy manually.');
+            });
+        });
+    </script>
+</body>
+</html>
